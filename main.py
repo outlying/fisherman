@@ -1,11 +1,11 @@
 from fisherman import Fisherman
-from io.window import WindowsWindowManager
+from gui_io.operator import Operator
 
 
 def run():
-    window_manager = WindowsWindowManager()
+
     fisherman = Fisherman(
-        window_manager=window_manager
+        operator=Operator.create()
     )
     fisherman.fish()
 

@@ -1,12 +1,13 @@
-from io.window import WindowManager
+from gui_io.operator import Operator
 
 
 class Fisherman:
 
-    def __init__(self, window_manager: WindowManager):
-        self.window_manager = window_manager
+    def __init__(self, operator: Operator):
+        self.operator = operator
         pass
 
     def fish(self):
-        self.window_manager.focus()
+        self.operator.window_manager.focus("World of Warcraft")
+        self.operator.keyboard_manger.press_key("q")
         pass
