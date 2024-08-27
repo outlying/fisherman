@@ -1,6 +1,5 @@
 from abc import abstractmethod, ABC
 
-import PIL.Image
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
@@ -12,22 +11,16 @@ class Finder(ABC):
     def find_bobber(self, before_img, after_img):
         pass
 
-class StandardFinder(Finder):
-
-    def __init__(self):
-        bobber_img = cv2.imread("bobber.png", cv2.IMREAD_UNCHANGED)
-        self.bobber_gray = cv2.cvtColor(bobber_img, cv2.COLOR_BGR2GRAY)
+class ThresholdFinder(Finder):
 
     def find_bobber(self, before_img, after_img):
 
         before_img = np.array(before_img)
         after_img = np.array(after_img)
-        PIL.Image.fromarray(after_img).save("ccc.png")
 
         # Convert to grayscale
         before_gray = cv2.cvtColor(before_img, cv2.COLOR_BGR2GRAY)
         after_gray = cv2.cvtColor(after_img, cv2.COLOR_BGR2GRAY)
-        bobber_gray = self.bobber_gray
 
         # Calculate the absolute difference between the images
         diff = cv2.absdiff(before_gray, after_gray)
@@ -35,23 +28,22 @@ class StandardFinder(Finder):
         # Apply a threshold to highlight the differences
         _, thresh = cv2.threshold(diff, 50, 255, cv2.THRESH_BINARY)
 
+        def incorrect_ratio(contour):
+            return  1.0 < (cv2.boundingRect(contour)[2] / cv2.boundingRect(contour)[3]) <= 2.0
+
         # Find contours in the thresholded image
         contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        contours = filter(lambda item: cv2.contourArea(item) > 50, contours)
+        contours = filter(incorrect_ratio, contours)
 
-        # Draw bounding boxes around detected contours
         bobber_detected_img = after_img.copy()
         for contour in contours:
-            # Filter out small contours that are unlikely to be the bobber
-            if cv2.contourArea(contour) > 50:
-                x, y, w, h = cv2.boundingRect(contour)
-                cv2.rectangle(bobber_detected_img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
-        # Convert image to RGB for displaying using matplotlib
-        bobber_detected_img_rgb = cv2.cvtColor(bobber_detected_img, cv2.COLOR_BGR2RGB)
+            x, y, w, h = cv2.boundingRect(contour)
+            cv2.rectangle(bobber_detected_img, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
         plt.figure(figsize=(10, 6))
         plt.title("Detected Bobber")
-        plt.imshow(bobber_detected_img_rgb)
+        plt.imshow(bobber_detected_img)
         plt.axis('off')
         plt.show()
         pass

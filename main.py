@@ -1,4 +1,4 @@
-from finder.finder import StandardFinder, TemplateFinder
+from finder.finder import ThresholdFinder, TemplateFinder
 from fisherman import Fisherman
 from gui_io.operator import Operator
 
@@ -7,7 +7,7 @@ def run():
 
     fisherman = Fisherman(
         operator=Operator.create(),
-        finder=TemplateFinder()
+        finder=ThresholdFinder()
     )
     fisherman.fish()
 
