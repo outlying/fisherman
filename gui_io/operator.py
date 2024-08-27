@@ -23,6 +23,9 @@ class Operator:
         self.throw_key = throw_key
         pass
 
+    def move_away(self):
+        self.mouse_manager.move(1, 1)
+
     def get_fish_at(self, x, y):
         window = self.window_manager.focus(self.window_name)
         self.mouse_manager.click(window.left + x, window.top + y)

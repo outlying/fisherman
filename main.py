@@ -13,7 +13,8 @@ def run():
         finder=ThresholdFinder(),
         observer=StandardObserver(operator)
     )
-    fisherman.fish()
+    while True:
+        fisherman.fish()
 
 if __name__ == '__main__':
     run()

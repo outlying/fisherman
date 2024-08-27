@@ -17,11 +17,18 @@ class MouseManager(ABC):
         """
         pass
 
+    @abstractmethod
+    def move(self, x, y):
+        pass
+
 
 class WindowsMouseManager(MouseManager):
 
     def __init__(self):
         super().__init__()
+
+    def move(self, x, y):
+        pyautogui.moveTo(x, y)
 
     def click(self, x, y, button='left'):
         """

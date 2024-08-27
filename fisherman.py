@@ -60,26 +60,12 @@ class Fisherman:
 
         if result:
             logger.info("Fish spotted, reel in.")
+            center = area[0] + area[2] / 2, area[1] + area[3] / 2
+            self.operator.get_fish_at(center[0], center[1])
+            self.operator.move_away()
+            self.operator.wait(2)
         else:
             logger.info("We missed the fish. Our observer did not detect anything.")
-
-
-        def get_center(area):
-            return area[0] + area[2] / 2, area[1] + area[3] / 2
-        center = get_center(areas[0])
-        self.operator.get_fish_at(center[0], center[1])
-
-        # print(areas)
-        #
-        # bobber_detected_img = np.array(see_after_throw).copy()
-        # for area in areas:
-        #     x, y, w, h = area
-        #     cv2.rectangle(bobber_detected_img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        # plt.figure(figsize=(10, 6))
-        # plt.title("Detected Bobber")
-        # plt.imshow(bobber_detected_img)
-        # plt.axis('off')
-        # plt.show()
 
         logger.info("We are done.")
 
