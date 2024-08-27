@@ -1,3 +1,4 @@
+import logging
 from abc import abstractmethod, ABC
 
 import cv2
@@ -11,10 +12,13 @@ class Finder(ABC):
     def find_bobber(self, before_img, after_img):
         pass
 
+
 class ThresholdFinder(Finder):
 
-    def find_bobber(self, before_img, after_img):
+    def __init__(self):
+        self.logger = logging.getLogger("ThresholdFinder")
 
+    def find_bobber(self, before_img, after_img):
         before_img = np.array(before_img)
         after_img = np.array(after_img)
 
@@ -26,27 +30,58 @@ class ThresholdFinder(Finder):
         diff = cv2.absdiff(before_gray, after_gray)
 
         # Apply a threshold to highlight the differences
-        _, thresh = cv2.threshold(diff, 50, 255, cv2.THRESH_BINARY)
+        _, thresh = cv2.threshold(diff, 40, 255, cv2.THRESH_BINARY)
 
         def incorrect_ratio(contour):
-            return  1.0 < (cv2.boundingRect(contour)[2] / cv2.boundingRect(contour)[3]) <= 2.0
+            return 0.6 < (cv2.boundingRect(contour)[2] / cv2.boundingRect(contour)[3]) <= 1.8
+
+        def amount_of_red(contour, image):
+            x, y, w, h = cv2.boundingRect(contour)
+            roi = image[y:y + h, x:x + w]
+
+            # Convert to HSV to check for red color
+            hsv_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+
+            # Red color range in HSV
+            lower_red1 = np.array([0, 70, 50])
+            upper_red1 = np.array([10, 255, 255])
+            lower_red2 = np.array([170, 70, 50])
+            upper_red2 = np.array([180, 255, 255])
+
+            # Create masks for red color
+            mask1 = cv2.inRange(hsv_roi, lower_red1, upper_red1)
+            mask2 = cv2.inRange(hsv_roi, lower_red2, upper_red2)
+
+            # Combine masks
+            red_mask = cv2.bitwise_or(mask1, mask2)
+
+            # Count the number of red pixels
+            red_pixels = cv2.countNonZero(red_mask)
+            if red_pixels > 0:
+                self.logger.debug(f"Red pixels found: {red_pixels}")
+            return red_pixels
+
+        def is_not_near_top(contour):
+            _, y, _, _ = cv2.boundingRect(contour)
+            return y >= 100
 
         # Find contours in the thresholded image
         contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        contours = filter(lambda item: cv2.contourArea(item) > 50, contours)
+        contours = filter(lambda item: cv2.contourArea(item) > 60, contours)
         contours = filter(incorrect_ratio, contours)
+        contours = filter(is_not_near_top, contours)
 
-        bobber_detected_img = after_img.copy()
-        for contour in contours:
-            x, y, w, h = cv2.boundingRect(contour)
-            cv2.rectangle(bobber_detected_img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        # Sort contours by the amount of red in descending order
+        contours = sorted(contours, key=lambda contour: amount_of_red(contour, after_img), reverse=True)
 
-        plt.figure(figsize=(10, 6))
-        plt.title("Detected Bobber")
-        plt.imshow(bobber_detected_img)
-        plt.axis('off')
-        plt.show()
-        pass
+        # Keep only the contour with the most red
+        if contours:
+            top_contour = contours[0]
+            areas = [cv2.boundingRect(top_contour)]
+        else:
+            areas = []
+
+        return areas
 
 
 class TemplateFinder(Finder):
