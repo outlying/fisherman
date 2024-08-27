@@ -8,6 +8,11 @@ class Fisherman:
         pass
 
     def fish(self):
-        self.operator.window_manager.focus("World of Warcraft")
-        self.operator.keyboard_manger.press_key("q")
+        see_before_throw = self.operator.see()
+        self.operator.throw()
+        self.operator.wait(2)
+        see_after_throw = self.operator.see()
+
+        see_before_throw.save("0before.png")
+        see_after_throw.save("1after.png")
         pass

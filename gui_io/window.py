@@ -26,3 +26,4 @@ class WindowsWindowManager(WindowManager):
         # Assuming we focus on the first matching window
         window = windows[0]
         window.activate()  # Bring the window to the foreground and give it focus
+        return window
