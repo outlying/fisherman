@@ -12,7 +12,6 @@ from observer.observer import Observer
 from utils import run_with_timeout
 
 # Set up logging
-logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 class Fisherman:
