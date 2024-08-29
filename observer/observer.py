@@ -1,3 +1,4 @@
+import time
 from abc import ABC, abstractmethod
 
 import numpy as np
@@ -10,7 +11,7 @@ from gui_io.operator import Operator
 class Observer(ABC):
 
     @abstractmethod
-    def observe(self, area):
+    def observe(self, timeout, area):
         pass
 
 class StandardObserver(Observer):
@@ -18,15 +19,23 @@ class StandardObserver(Observer):
     def __init__(self, operator: Operator):
         self.operator = operator
 
-    def observe(self, area):
+    def observe(self, timeout, area):
         previous = None
+        start_time = time.time()
+
         while True:
+            current_time = time.time()
+            elapsed_time = current_time - start_time
+
+            if elapsed_time > timeout:
+                return False  # Timeout reached, return False
+
             current = self.operator.see_area(area)
 
             if previous:
                 change_value = self.calculate_change(previous, current)
                 if change_value > 0.03:
-                    return True
+                    return True  # Significant change detected, return True
 
             previous = current
 

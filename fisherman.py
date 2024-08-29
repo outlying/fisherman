@@ -4,7 +4,6 @@ import time
 from finder.finder import Finder
 from gui_io.operator import Operator
 from observer.observer import Observer
-from utils import run_with_timeout
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -50,7 +49,7 @@ class Fisherman:
 
         timeout = max(fishing_start_time + 22 - time.time(), 0)
         logger.info(f"Waiting {timeout}s for the fish")
-        result = run_with_timeout(self.observer.observe, timeout, area)
+        result = self.observer.observe(timeout, area)
 
         if result:
             logger.info("Fish spotted, reel in.")
