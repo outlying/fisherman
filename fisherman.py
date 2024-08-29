@@ -1,10 +1,5 @@
 import logging
-import math
 import time
-
-import cv2
-import numpy as np
-from matplotlib import pyplot as plt
 
 from finder.finder import Finder
 from gui_io.operator import Operator
