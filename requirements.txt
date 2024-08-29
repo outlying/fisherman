@@ -17,7 +17,6 @@ constantly==15.1.0
 cryptography==3.4.8
 dbus-python==1.2.18
 distro==1.7.0
-distro-info==1.1+ubuntu0.1
 docutils==0.21.1
 ecdsa==0.18.0
 esptool==4.6.2
