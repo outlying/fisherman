@@ -54,6 +54,7 @@ class Fisherman:
         if result:
             logger.info("Fish spotted, reel in.")
             center = area[0] + area[2] / 2, area[1] + area[3] / 2
+            self.operator.wait(0.8)
             self.operator.get_fish_at(center[0], center[1])
             self.operator.move_away()
             self.operator.wait(2)
