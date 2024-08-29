@@ -38,6 +38,6 @@ class WindowsMouseManager(MouseManager):
         :param button: The mouse button to click, 'left' or 'right'. Default is 'left'.
         """
         try:
-            pyautogui.click(x=x, y=y, button=button)  # Simulate mouse click at (x, y) with specified button
+            pyautogui.click(x=x, y=y, button=button, clicks=2)  # Simulate mouse click at (x, y) with specified button
         except Exception as e:
             raise Exception(f"Error clicking at ({x}, {y}) with button '{button}': {str(e)}")
