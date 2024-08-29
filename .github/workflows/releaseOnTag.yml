@@ -2,6 +2,8 @@ name: Build and Release
 
 on:
   push:
+    branches:
+      - master
     tags:
       - 'v*.*.*'
 
@@ -50,28 +52,3 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-
-    - name: Download build artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: main-exe
-
-    - name: Create GitHub Release
-      uses: ncipollo/release-action@v1
-      with:
-        artifacts: "dist/main.exe"
-        name: Release ${{ github.ref }}
-        body: |
-          This is the release for version ${{ github.ref }}.
-        draft: false
-        prerelease: false
-
-    - name: Upload release asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: dist/main.exe
-        asset_name: main.exe
-        asset_content_type: application/octet-stream
