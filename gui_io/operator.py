@@ -1,5 +1,7 @@
 import time
 
+import pyautogui
+
 from gui_io.keyboard import KeyboardManager, WindowsKeyboardManager
 from gui_io.mouse import WindowsMouseManager, MouseManager
 from gui_io.screenshot import ScreenshotManager, WindowsScreenshotManager
@@ -21,14 +23,19 @@ class Operator:
         self.mouse_manager = mouse_manager
         self.screenshot = screenshot_manager
         self.throw_key = throw_key
+
+        pyautogui.FAILSAFE = False
         pass
 
     def move_away(self):
-        self.mouse_manager.move(1, 1)
+        window = self.window_manager.focus(self.window_name)
+        self.mouse_manager.move(window.left + 1, window.top + 1)
 
     def get_fish_at(self, x, y):
         window = self.window_manager.focus(self.window_name)
-        self.mouse_manager.click(window.left + x, window.top + y)
+        pyautogui.moveTo(window.left + x, window.top + y)
+        self.wait(0.2)
+        pyautogui.doubleClick()
 
     def abort_fishing(self):
         self.keyboard_manger.press_key("esc")

@@ -18,3 +18,4 @@ numpy~=2.1.0
 matplotlib~=3.9.2
 PyAutoGUI~=0.9.54
 PyGetWindow~=0.0.9
+PyQt6~=6.7.1
