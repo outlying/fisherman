@@ -23,6 +23,8 @@ class Operator:
         self.mouse_manager = mouse_manager
         self.screenshot = screenshot_manager
         self.throw_key = throw_key
+
+        pyautogui.FAILSAFE = False
         pass
 
     def move_away(self):
