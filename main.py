@@ -1,4 +1,9 @@
 import logging
+import sys
+
+from PyQt6.QtWidgets import QApplication
+
+from desktop.main_window import MainWindow
 
 from finder.finder import ThresholdFinder
 from fisherman import Fisherman
@@ -13,15 +18,22 @@ logging.basicConfig(
 
 def run():
 
-    operator = Operator.create()
+    app = QApplication(sys.argv)
 
-    fisherman = Fisherman(
-        operator=operator,
-        finder=ThresholdFinder(),
-        observer=StandardObserver(operator)
-    )
-    while True:
-        fisherman.fish()
+    main_window = MainWindow()
+    main_window.show()
+
+    sys.exit(app.exec())
+
+    # operator = Operator.create()
+    #
+    # fisherman = Fisherman(
+    #     operator=operator,
+    #     finder=ThresholdFinder(),
+    #     observer=StandardObserver(operator)
+    # )
+    # while True:
+    #     fisherman.fish()
 
 if __name__ == '__main__':
     run()
