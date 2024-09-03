@@ -25,15 +25,5 @@ def run():
 
     sys.exit(app.exec())
 
-    # operator = Operator.create()
-    #
-    # fisherman = Fisherman(
-    #     operator=operator,
-    #     finder=ThresholdFinder(),
-    #     observer=StandardObserver(operator)
-    # )
-    # while True:
-    #     fisherman.fish()
-
 if __name__ == '__main__':
     run()
