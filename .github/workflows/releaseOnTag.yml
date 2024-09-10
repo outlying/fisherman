@@ -65,5 +65,5 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        TAG_NAME=${{ github.ref }}
+        TAG_NAME=$(basename ${{ github.ref }})
         gh release create $TAG_NAME fisherman.exe --title "Release $TAG_NAME" --notes "Auto-generated release by GitHub Actions."
