@@ -63,4 +63,4 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         TAG_NAME=${{ github.ref }}
-        gh release create $TAG_NAME artifact.zip --title "Release $TAG_NAME" --notes "Auto-generated release by GitHub Actions."
+        gh release create $TAG_NAME fisherman.exe --title "Release $TAG_NAME" --notes "Auto-generated release by GitHub Actions."
