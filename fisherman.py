@@ -16,7 +16,14 @@ class Fisherman:
         self.observer = observer
         logger.info("Fisherman initialized.")
 
-    def fish(self):
+    def fish(self) -> dict:
+
+        fishing_result = {
+            "success": False,
+            "time_to_catch": None,
+            "failed_to_find": False,
+            "failed_to_detect_movement": False
+        }
 
         fishing_start_time = None
         areas = list()
@@ -42,6 +49,9 @@ class Fisherman:
             if len(areas) != 1:
                 self.operator.abort_fishing()
                 self.operator.wait(3)
+                fishing_result["success"] = False
+                fishing_result["failed_to_find"] = True
+                return fishing_result
 
         area = areas[0]
 
@@ -53,13 +63,19 @@ class Fisherman:
 
         if result:
             logger.info("Fish spotted, reel in.")
+            fishing_result["success"] = True
+            fishing_result["time_to_catch"] = time.time() - fishing_start_time
             center = area[0] + area[2] / 2, area[1] + area[3] / 2
             self.operator.wait(1.2)
             self.operator.get_fish_at(center[0], center[1])
             self.operator.move_away()
             self.operator.wait(2)
         else:
+            fishing_result["success"] = False
+            fishing_result["failed_to_detect_movement"] = True
             logger.info("We missed the fish. Our observer did not detect anything.")
 
         logger.info("We are done.")
+
+        return fishing_result
 

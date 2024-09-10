@@ -61,7 +61,9 @@ class Operator:
         pass
 
     @staticmethod
-    def create():
+    def create(
+            throw_key: str = "q"
+    ):
         #  TODO do system selection here
 
         window_manager = WindowsWindowManager()
@@ -73,5 +75,6 @@ class Operator:
             window_manager=window_manager,
             keyboard_manager=keyword_manager,
             mouse_manager=mouse_manager,
-            screenshot_manager=screenshot_manager
+            screenshot_manager=screenshot_manager,
+            throw_key=throw_key
         )
