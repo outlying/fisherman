@@ -57,6 +57,8 @@ class ThresholdFinder(Finder):
 
             # Count the number of red pixels
             red_pixels = cv2.countNonZero(red_mask)
+            if red_pixels > 0:
+                self.logger.debug(f"Red pixels found: {red_pixels}")
             return red_pixels
 
         def is_not_near_top(contour):
