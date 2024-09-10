@@ -28,11 +28,11 @@ class Operator:
         pass
 
     def move_away(self):
-        window = self.window_manager.focus(self.window_name)
+        window = self.window_manager.get_window(self.window_name)
         self.mouse_manager.move(window.left + 1, window.top + 1)
 
     def get_fish_at(self, x, y):
-        window = self.window_manager.focus(self.window_name)
+        window = self.window_manager.get_window(self.window_name)
         pyautogui.moveTo(window.left + x, window.top + y)
         self.wait(0.2)
         pyautogui.doubleClick()
@@ -41,14 +41,17 @@ class Operator:
         self.keyboard_manger.press_key("esc")
         self.wait(3)
 
+    def focus(self):
+        self.window_manager.get_window(self.window_name).activate()
+
     def see(self):
-        window = self.window_manager.focus(self.window_name)
+        window = self.window_manager.get_window(self.window_name)
         bbox = window.left, window.top, window.right, window.bottom
         time.sleep(0.2)
         return self.screenshot.take_screenshot(bbox)
 
     def see_area(self, area):
-        window = self.window_manager.focus(self.window_name)
+        window = self.window_manager.get_window(self.window_name)
         bbox = window.left + area[0], window.top + area[1], window.left + area[0] + area[2], window.top + area[1] + area[3]
         return self.screenshot.take_screenshot(bbox)
 

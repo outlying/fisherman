@@ -29,6 +29,8 @@ class Fisherman:
         areas = list()
         logger.info("Starting the fishing cast.")
 
+        self.operator.focus()
+
         while len(areas) != 1:
 
             see_before_throw = self.operator.see()

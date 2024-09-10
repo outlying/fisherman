@@ -8,7 +8,7 @@ class WindowManager(ABC):
         pass
 
     @abstractmethod
-    def focus(self, window_name: str):
+    def get_window(self, window_name: str):
         pass
 
 
@@ -17,7 +17,7 @@ class WindowsWindowManager(WindowManager):
     def __init__(self):
         super().__init__()
 
-    def focus(self, window_name: str):
+    def get_window(self, window_name: str):
         # Get the list of all open windows
         windows = gw.getWindowsWithTitle(window_name)
         if not windows:
@@ -25,5 +25,4 @@ class WindowsWindowManager(WindowManager):
 
         # Assuming we focus on the first matching window
         window = windows[0]
-        window.activate()  # Bring the window to the foreground and give it focus
         return window
