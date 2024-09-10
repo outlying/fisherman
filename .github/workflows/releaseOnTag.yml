@@ -32,15 +32,15 @@ jobs:
 
     - name: Build executable with PyInstaller
       run: |
-        pyinstaller --onefile main.py
+        pyinstaller --onefile --name fisherman main.py 
 
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: main-exe
-        path: dist/main*
+        name: fisherman-windows
+        path: dist/*.*
 
-  release:
+  create_release:
     needs: build
     runs-on: ubuntu-latest
     permissions:
@@ -48,5 +48,19 @@ jobs:
       contents: write
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+    - uses: actions/download-artifact@v4
+      with:
+        name: fisherman-windows
+
+    - name: Install GitHub CLI
+      run: |
+        ls -la
+        sudo apt-get update
+        sudo apt-get install gh
+
+    - name: Create Release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        TAG_NAME=${{ github.ref }}
+        gh release create $TAG_NAME artifact.zip --title "Release $TAG_NAME" --notes "Auto-generated release by GitHub Actions."
