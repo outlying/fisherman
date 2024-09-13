@@ -13,7 +13,7 @@ from finder.finder import ThresholdFinder
 from fisherman import Fisherman
 from gui_io.operator import Operator
 from observer.observer import StandardObserver
-from utils import get_version
+from version import get_version
 
 
 class MainWindow(QMainWindow):

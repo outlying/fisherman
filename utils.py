@@ -1,11 +1,12 @@
 import os
+import sys
 
 
-def get_version():
-    version_file = "version.txt"
-    if os.path.exists(version_file):
-        with open(version_file, "r") as file:
-            version = file.read().strip()
-            if version:
-                return version
-    return "[development]"
+def resource_path(relative_path):
+    """ Get the absolute path to a resource, works for PyInstaller """
+    if hasattr(sys, '_MEIPASS'):
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
