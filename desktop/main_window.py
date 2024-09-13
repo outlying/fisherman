@@ -11,7 +11,7 @@ from desktop.fisherman_worker import FishermanWorker
 from desktop.key_widget import KeyEdit
 from desktop.logger_plain_text import LoggerPlainText, LoggerPlainTextLoggingHandler
 from finder.finder import ThresholdFinder
-from fisherman import Fisherman
+from fisherman import Fisherman, logger
 from gui_io.operator import Operator
 from observer.observer import StandardObserver
 
@@ -69,7 +69,8 @@ class MainWindow(QMainWindow):
 
         self.handler.log_signal.connect(update_logs_text)
 
-        logging.getLogger().addHandler(self.handler)
+        if self.handler not in logging.getLogger().handlers:
+            logging.getLogger().addHandler(self.handler)
 
         return logs_text
 
@@ -131,13 +132,22 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event): #  this is window close event
 
-        if self.worker:
+        if self.worker and self.worker.isRunning():
             self.worker.stop()
-            self.worker.wait()
-            event.accept()
+            self.worker.disconnect()
+            self.worker.wait(100)
 
-        self.handler.log_signal.disconnect()
-        logging.getLogger().removeHandler(self.handler)
+            if self.worker.isRunning():
+                self.worker.terminate()
+
+        if self.handler:
+            logging.getLogger().removeHandler(self.handler)
+            self.handler.flush()
+            self.handler.close()
+
+        logging.shutdown()
+
+        event.accept()
 
     def update_statistics_data(self, result):
         self.statistics["count"] = self.statistics["count"] + 1

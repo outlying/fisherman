@@ -1,4 +1,3 @@
-import time
 from logging import getLogger
 
 from PyQt6.QtCore import QThread, pyqtSignal
@@ -19,12 +18,16 @@ class FishermanWorker(QThread):
     def run(self):
         while self._running:
             try:
+                if not self._running:
+                    break
+
                 result = self._fisherman.fish()
+                self.update_signal.emit(result)
+
             except Exception as e:
                 self._running = False
                 getLogger().error(str(e))
                 break
-            self.update_signal.emit(result)
 
     def stop(self):
         self._running = False
