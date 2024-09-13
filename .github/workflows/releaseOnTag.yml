@@ -18,6 +18,10 @@ jobs:
       with:
         python-version: '3.12'
 
+    - name: Create version.txt from GitHub tag
+      run: |
+        echo "${{ github.ref_name }}" > version.txt
+
     - name: Upgrade Pip
       run: |
         python -m pip install --upgrade pip

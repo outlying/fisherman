@@ -3,17 +3,17 @@ import textwrap
 from typing import Optional
 
 from PyQt6.QtCore import pyqtSlot
-from PyQt6.QtGui import QPalette, QColor
-from PyQt6.QtWidgets import QMainWindow, QHBoxLayout, QWidget, QVBoxLayout, QPlainTextEdit, QLayout, QPushButton, \
+from PyQt6.QtWidgets import QMainWindow, QHBoxLayout, QWidget, QVBoxLayout, QPushButton, \
     QLabel, QGridLayout
 
 from desktop.fisherman_worker import FishermanWorker
 from desktop.key_widget import KeyEdit
 from desktop.logger_plain_text import LoggerPlainText, LoggerPlainTextLoggingHandler
 from finder.finder import ThresholdFinder
-from fisherman import Fisherman, logger
+from fisherman import Fisherman
 from gui_io.operator import Operator
 from observer.observer import StandardObserver
+from utils import get_version
 
 
 class MainWindow(QMainWindow):
@@ -40,7 +40,7 @@ class MainWindow(QMainWindow):
         self.start_button = QPushButton()
         self.start_button.setEnabled(False)
 
-        self.setWindowTitle("Fisherman")
+        self.setWindowTitle(f"Fisherman {get_version()}")
         self.setGeometry(100, 100, 400, 300)
         self.setMinimumSize(700, 400)
 
@@ -146,6 +146,8 @@ class MainWindow(QMainWindow):
             self.handler.close()
 
         logging.shutdown()
+
+        self.handler = None
 
         event.accept()
 
